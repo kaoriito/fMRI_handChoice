@@ -23,9 +23,9 @@ leftHandKey='LeftArrow';
 breakKey=KbName('Escape');
 
 %% create structures for each condition type
-choiceObj=cell(32,4);
-instructObj=cell(32,4);
-restObj=cell(8,1);
+choice=cell(32,4);
+instruct=cell(32,4);
+rest=cell(8,1);
 
 %% set the screen
 Screen('Preference', 'SkipSyncTests', 1); %remove this line if sync tests pass
@@ -102,14 +102,14 @@ for i=1:16
             disp(instructCount);
             trialtype=instructHands(instructArr(instructCount));
             instructCount=instructCount+1;
- 
+            
         end
         
         disp(trialtype);
         
         delay=delayArr(j);
        
-        [pressnum,trialObj]=trial(pressnum, trialtype, delay, wPtr);
+        pressnum=trial(pressnum, trialtype, delay, wPtr);
         
     end
 

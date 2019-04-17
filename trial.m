@@ -1,5 +1,5 @@
-function pressnum = trial (pressnum, trialtype, delay, wPtr)
-global rightHandKey leftHandKey
+function [pressnum,trialObj] = trial (pressnum, trialtype, delay, wPtr)
+global rightHandKey leftHandKey breakKey
 
 %%
     if strcmp(trialtype,'choice')
@@ -16,24 +16,30 @@ global rightHandKey leftHandKey
     drawCue(wPtr,phase);
     fillThermo(wPtr,pressnum);
     Screen('Flip',wPtr);
-    WaitSecs(1);
+    BreakableWait(1);
 %%
     phase='go';
+    %beep500=MakeBeep(500,0.15,48000);
+    %sound(beep500,48000);
     phaseStartTime=GetSecs();
     drawCue(wPtr,phase);
     fillThermo(wPtr,pressnum);
     
-    stimTime=Screen('Flip',wPtr); % get the time at which the 'Go' is displayed
+    stimGoTime=Screen('Flip',wPtr); % get the time at which the 'Go' is displayed
     stimDuration=1.5;
     
     
-    
-    while GetSecs() <= stimTime + stimDuration
+    while GetSecs() <= stimGoTime + stimDuration
         [keyIsDown, pressedSecs, keyCode] = KbCheck(-1);
         
         if keyIsDown
-           responseKey=KbName(find(keyCode));
-           responseTime=pressedSecs-phaseStartTime;
+           if (find(keyCode)==breakKey)
+               sca;
+               error('Exiting: user pressed escape.');
+           else
+               responseKey=KbName(find(keyCode));
+               responseTime=pressedSecs-phaseStartTime;
+           end
         end
         
     end
@@ -66,13 +72,13 @@ global rightHandKey leftHandKey
     drawCue(wPtr,phase);
     fillThermo(wPtr,pressnum);
     Screen('Flip',wPtr);
-    WaitSecs(0.5);
+    BreakableWait(0.5);
     
 %%
     phase='stop';
     drawCue(wPtr,phase);
     fillThermo(wPtr,pressnum);
     Screen('Flip',wPtr);
-    WaitSecs(delay);
+    BreakableWait(delay);
     
 end

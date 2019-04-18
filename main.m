@@ -101,8 +101,8 @@ fprintf('Trigger received\n');
 
 %% designate block
 
-for i=1:2
-%for i=1:length(blockarr)
+%for i=1:2
+for i=1:length(blockarr)
     
     block=conditions(blockarr(i));
     pressnum=0;
@@ -193,7 +193,7 @@ for i=1:2
     
     restOff=BreakableWait(12);
     restObj{i,1}.Duration=restOff-restObj{i,1}.Onset-triggerTime;
-    5
+    
     %
     
 end

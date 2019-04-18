@@ -7,7 +7,8 @@ function main()
 % NOTES: 
 %   this task has randomized blocks of choice/instruction blocks
 %    where they can at most appear in consecutive order 3 times
-%    and there is a total of 8 blocks of each type
+%    and there is a total of 8 blocks of each type; and 16 blocks of 12s
+%    rest
 %
 %   each of the trials are an event; there are 4 trials in a block (trials
 %    last 3 seconds each); trials are jittered at a random
@@ -21,6 +22,20 @@ global rightHandKey leftHandKey screenWidth screenHeight breakKey
 rightHandKey='RightArrow';
 leftHandKey='LeftArrow';
 breakKey=KbName('Escape');
+
+%%
+
+prompt={'Subject ID:','run:'};
+dlgtitle='Input';
+dims=[1 35];
+definput={'c0024','run0'};
+answer=inputdlg(prompt,dlgtitle,dims,definput);
+
+subjectID=answer{1};
+run=answer{2};
+
+logDirectory='/Users/lilyito/Documents/Projects/stroke_compensation/pilot/mri/fmri_task/logs';
+
 
 %% create structures for each condition type
 choiceObj=cell(32,4);
@@ -86,7 +101,8 @@ fprintf('Trigger received\n');
 
 %% designate block
 
-for i=1:length(blockarr)
+for i=1:2
+%for i=1:length(blockarr)
     
     block=conditions(blockarr(i));
     pressnum=0;
@@ -177,7 +193,7 @@ for i=1:length(blockarr)
     
     restOff=BreakableWait(12);
     restObj{i,1}.Duration=restOff-restObj{i,1}.Onset-triggerTime;
-    
+    5
     %
     
 end
@@ -186,5 +202,9 @@ toc;
 %%
 clear Screen;
 
+filename=strcat(subjectID,'_',run,'logs.mat');
+path2save=fullfile(logDirectory,filename);
+
+save(path2save,'choiceObj','instructObj','restObj','choiceBlockLogs','instructBlockLogs')
 
 end

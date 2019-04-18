@@ -19,20 +19,23 @@ function main()
 global rightHandKey leftHandKey screenWidth screenHeight breakKey
 
 rightHandKey='RightArrow';
-leftHandKey='LeftArrow';
+leftHandKey='LeftArrow';5
 breakKey=KbName('Escape');
 
 %% create structures for each condition type
-choice=cell(32,4);
-instruct=cell(32,4);
-rest=cell(8,1);
+choiceObj=cell(32,4);
+instructObj=cell(32,4);
+restObj=cell(16,1);
+
+choiceBlockLogs=zeros(8,2);
+instructBlockLogs=zeros(8,2);
 
 %% set the screen
 Screen('Preference', 'SkipSyncTests', 1); %remove this line if sync tests pass
 Screen('Preference','VisualDebugLevel',0);
 
-[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')),[0 0 0],[0 0 400 280]); %open the screen
-%[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')), [0 0 0]);
+%[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')),[0 0 0],[0 0 400 280]); %open the screen
+[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')), [0 0 0]);
 screenWidth=rect(3);
 screenHeight=rect(4);
 
@@ -41,7 +44,8 @@ screenHeight=rect(4);
 
 conditions={'instruct','choice'};
 blockarr=generateBlockArray();
-disp(blockarr);
+instructBlockNum=1;
+choiceBlockNum=1;
 
 %% generate pseudorandom left/right trials for instruct block
 % this will generate an array of 32, with 1 & 2 randomized (totalling 16
@@ -77,51 +81,108 @@ while 1
 end
 
 triggerTime=timeSecs;
+tic;
 fprintf('Trigger received\n');
 
 %% designate block
 
-for i=1:16
+for i=1:length(blockarr)
     
     block=conditions(blockarr(i));
-    disp(block);
     pressnum=0;
     
     delayArr=generateDelayArray();
     
+    % show block cue, record onset of block
+    if strcmp(block,'instruct')
+        text='Instruct';
+        Screen('FillRect',wPtr,[0 0 0]);
+        DrawFormattedText(wPtr,text,'center','center',[255 255 255]);
+        Screen('Flip',wPtr);
+        instructTime=BreakableWait(1);
+        
+        blocknum=instructBlockNum;
+        instructBlockLogs(blocknum,1)=instructTime-triggerTime;
+    else
+        text='Choose';
+        Screen('FillRect',wPtr,[0 0 0]);
+        DrawFormattedText(wPtr,text,'center','center',[255 255 255]);
+        Screen('Flip',wPtr);
+        choiceTime=BreakableWait(1);
+        
+        blocknum=choiceBlockNum;
+        choiceBlockLogs(blocknum,1)=choiceTime-triggerTime;
+    end
+    
+        
     %% designate trial within block
     for j=1:4
         
         if strcmp(block,'choice')
             % 0th second: designate block
             trialtype='choice';
-            choiceCount=choiceCount+1;
+            trialCount=choiceCount;
             
         elseif strcmp(block,'instruct')
              % 0th second: designate block
             disp(instructCount);
             trialtype=instructHands(instructArr(instructCount));
-            instructCount=instructCount+1;
-            
+            trialCount=instructCount;
         end
         
         disp(trialtype);
         
         delay=delayArr(j);
        
-        pressnum=trial(pressnum, trialtype, delay, wPtr);
+        [pressnum,trialObj]=trial(pressnum, trialtype, delay, wPtr,trialCount,triggerTime);
         
+        
+        % put the trialObj into it's own row in its condition (choice/instruct) object
+        if strcmp(block,'choice')
+            % 4 columns, for each phase of a trial
+            choiceObj{trialCount,1}=trialObj{1,1};
+            choiceObj{trialCount,2}=trialObj{1,2};
+            choiceObj{trialCount,3}=trialObj{1,3};
+            choiceObj{trialCount,4}=trialObj{1,4};
+            choiceCount=choiceCount+1;
+        else
+            instructObj{trialCount,1}=trialObj{1,1};
+            instructObj{trialCount,2}=trialObj{1,2};
+            instructObj{trialCount,3}=trialObj{1,3};
+            instructObj{trialCount,4}=trialObj{1,4};
+            instructCount=instructCount+1;
+        end
+        
+    end
+    
+    if strcmp(block,'instruct')
+        blocknum=instructBlockNum;
+        instructBlockLogs(blocknum,2)=GetSecs-instructBlockLogs(blocknum,1)-triggerTime;
+        instructBlockNum=instructBlockNum+1;
+    else
+        blocknum=choiceBlockNum;
+        choiceBlockLogs(blocknum,2)=GetSecs-choiceBlockLogs(blocknum,1)-triggerTime;
+        choiceBlockNum=choiceBlockNum+1;
     end
 
     %%
     %% rest block
     drawCross(wPtr);
-    Screen('Flip',wPtr);
-
-    WaitSecs(20);
+    restTime=Screen('Flip',wPtr);
+    restObj{i,1}.Onset=restTime-triggerTime;
+    restObj{i,1}.trial=i;
+    restObj{i,1}.type='rest'; 
+    restObj{i,1}.response='';
+    restObj{i,1}.responseTime='';
+    
+    restOff=BreakableWait(12);
+    restObj{i,1}.Duration=restOff-restObj{i,1}.Onset-triggerTime;
+    
     %
     
 end
+
+toc;
 %%
 clear Screen;
 

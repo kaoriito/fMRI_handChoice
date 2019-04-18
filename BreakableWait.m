@@ -1,4 +1,4 @@
-function BreakableWait(secs)
+function endTime=BreakableWait(secs)
     global breakKey
     
     startTime=GetSecs;
@@ -13,5 +13,6 @@ function BreakableWait(secs)
             end
         end
     end
-
+    
+    endTime=GetSecs;
 end

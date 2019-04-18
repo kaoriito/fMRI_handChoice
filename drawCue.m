@@ -18,7 +18,6 @@ switch(phase)
         text='<<';
         textCenterX=screenWidth/2 - (screenWidth/8)/4;
         textCenterY=screenHeight/3 - (screenHeight/8);
-        Screen('TextSize',wPtr,round(screenHeight/14));
         DrawFormattedText(wPtr,text,textCenterX,textCenterY,[255 255 255]);
 
         return;
@@ -28,7 +27,6 @@ switch(phase)
         text='>>';
         textCenterX=screenWidth/2 - (screenWidth/8)/4;
         textCenterY=screenHeight/3 - (screenHeight/8);
-        Screen('TextSize',wPtr,round(screenHeight/14));
         DrawFormattedText(wPtr,text,textCenterX,textCenterY,[255 255 255]);
         
         return;

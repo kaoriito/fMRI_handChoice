@@ -73,7 +73,7 @@ choiceCount=1;
 
 % Set font options
 defaultFont='Helvetica';
-Screen('TextSize',wPtr,24);
+Screen('TextSize',wPtr,round(screenHeight/14));
 Screen('TextFont',wPtr,defaultFont);
 
 %% Present start screen = stays until key pressed

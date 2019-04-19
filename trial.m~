@@ -1,4 +1,4 @@
-function [pressnum,trialObj] = trial (pressnum, trialtype, delay, wPtr,trialCount,triggerTime)
+5333function [pressnum,trialObj] = trial (pressnum, trialtype, delay, wPtr,trialCount,triggerTime)
 global rightHandKey leftHandKey breakKey
 
 % create trial object

@@ -19,9 +19,16 @@ function main()
 %% change this based on input keys from scanner/keyboard
 global rightHandKey leftHandKey screenWidth screenHeight breakKey
 
-rightHandKey='RightArrow';
-leftHandKey='LeftArrow';
+KbName('UnifyKeyNames');
+
+% these are set to the key names without KbName because we are using string
+% compare to the keyname pressed later.
+rightHandKey="4$";
+leftHandKey="3#";
+
+
 breakKey=KbName('Escape');
+triggerCode=KbName('5%'); %set scanner trigger key here
 
 %%
 
@@ -82,8 +89,9 @@ Screen('FillRect',wPtr,[0 0 0]);
 DrawFormattedText(wPtr,text,'center','center',[255 255 255]);
 Screen('Flip',wPtr);
 
+DisableKeysForKbCheck([]);
 fprintf('Waiting for scanner trigger...');
-triggerCode=KbName('5%'); %set scanner trigger key here
+
 
 while 1
     [ keyIsDown, timeSecs, keyCode] = KbCheck(-1);
@@ -98,6 +106,8 @@ end
 triggerTime=timeSecs;
 tic;
 fprintf('Trigger received\n');
+
+DisableKeysForKbCheck([triggerCode]);
 
 %% designate block
 

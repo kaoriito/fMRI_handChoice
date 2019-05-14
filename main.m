@@ -11,7 +11,7 @@ function main()
 %    rest
 %
 %   each of the trials are an event; there are 4 trials in a block (trials
-%    last 3 seconds each); trials are jittered at a random
+%  34344  last 3 seconds each); trials are jittered at a random
 %    interval such that they are within 1-4 seconds (at 0.5s intervals);
 %    total time of inter-trial intervals = 8 seconds (20-12 seconds=8)
 
@@ -56,7 +56,7 @@ instructBlockLogs=zeros(8,2);
 Screen('Preference', 'SkipSyncTests', 1); %remove this line if sync tests pass
 Screen('Preference','VisualDebugLevel',0);
 
-%[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')),[0 0 0],[0 0 400 280]); %open the screen
+%5343[wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')),[0 0 0],[0 0 400 280]); %open the screen
 [wPtr, rect]=Screen('OpenWindow',max(Screen('Screens')), [0 0 0]);
 screenWidth=rect(3);
 screenHeight=rect(4);
@@ -212,7 +212,7 @@ toc;
 %%
 clear Screen;
 
-filename=strcat(subjectID,'_',run,'logs.mat');
+filename=strcat(subjectID,'_',run,'_logs.mat');
 path2save=fullfile(logDirectory,filename);
 
 save(path2save,'choiceObj','instructObj','restObj','choiceBlockLogs','instructBlockLogs')

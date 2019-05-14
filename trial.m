@@ -14,11 +14,11 @@ global rightHandKey leftHandKey breakKey
     trialObj{1,4}.trial=trialCount;
     
     trialObj{1,1}.response='';
-    trialObj{1,2}.response='';
+    trialObj{1,3}.response='';
     trialObj{1,4}.response='';
     
     trialObj{1,1}.responseTime='';
-    trialObj{1,2}.responseTime='';
+    trialObj{1,3}.responseTime='';
     trialObj{1,4}.responseTime='';
 %%  
     if strcmp(trialtype,'choice')
@@ -99,8 +99,8 @@ global rightHandKey leftHandKey breakKey
         end
 
         
-        trialObj{1,3}.response=responseKey;
-        trialObj{1,3}.responseTime=responseTime;
+        trialObj{1,2}.response=responseKey;
+        trialObj{1,2}.responseTime=responseTime;
     end
     
     
